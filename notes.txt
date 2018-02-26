@@ -10,6 +10,10 @@ How to read files at x line
 https://stackoverflow.com/questions/4864361/using-python-how-to-read-a-file-starting-at-the-seventh-line
 
 
+https://stackoverflow.com/questions/45193335/remove-backslash-from-json-string
+https://stackoverflow.com/questions/38888714/python-insert-a-line-break-in-a-string-after-character-x
+
+https://stackoverflow.com/questions/38585204/pycharm-to-toggle-soft-wrap-in-code-editor
 
 Random Notes:
 - checking for large airports only

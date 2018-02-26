@@ -1,5 +1,6 @@
 import os
 import csv
+import codecs
 import json
 from geopy.geocoders import Nominatim
 from geopy.distance import great_circle
@@ -28,23 +29,24 @@ def get_airports(airports_list):
 
 
 def updateJSON(airports_list):
+
+
+    #delete the old file if one exists and make a new one
     #if os.path.exists('ufo_awesome_with_airport.json'):
     #    os.remove('ufo_awesome_with_airport.json')
 
     output_json = open("ufo_awesome_with_airport.json", 'a')
-    error_log = open("error_log.txt", 'a')
+    error_log = open("error_log_json.txt", 'a')
 
-    index = 43698
-    #index = 0
-
-
+    index = 0
 
     with open('ufo_awesome.json') as f:
-        for i in range(0,43697): #dang test, co gi thi hoi Khoi
+
+        #edit the range and index if we need to write in between
+        for i in range(0,0):
             next(f)
         for line in f:
             try:
-                #print((json.loads(line)))
                 input_json = json.loads(line)
 
                 geolocator = Nominatim()
@@ -82,14 +84,70 @@ def updateJSON(airports_list):
                 print(index, ufo_location, closest_airport)
 
 
-                #edit the JSON
-                input_json['airport_name'] = closest_airport[0]
-                input_json['airport_distance'] = closest_airport[1]
+                #append the JSON
+                input_json["airport_name"] = closest_airport[0]
+                input_json["airport_distance"] = closest_airport[1]
 
                 output_json.write(str(input_json))
                 index = index + 1
             except Exception as e:
-                err = "Skipped Data: " + str(index) + " " + str(e)
+                err = str(index) + " " + str(e)
+                print(err)
+                error_log.write(err + "\n")
+                index = index + 1
+                pass
+
+        formatJSON()
+
+
+
+#fix the json formatting
+def formatJSON():
+
+    formatted_json = {}
+
+
+    with open('ufo_awesome_with_airport.json') as f:
+        for curr in f:
+            formatted_json = curr.replace("\'", '"')
+            formatted_json = formatted_json.replace("}", '}\n')
+
+    #remove the file and
+    if os.path.exists('ufo_awesome_with_airport.json'):
+        os.remove('ufo_awesome_with_airport.json')
+
+    output_json = open("ufo_awesome_with_airport.json", 'w')
+    output_json.write(formatted_json)
+
+
+def JSONtoTSV():
+    if os.path.exists('ufo_awesome_with_airport.tsv'):
+        os.remove('ufo_awesome_with_airport.tsv')
+
+    error_log = open("error_log_tsv.txt", 'a')
+    outfile = open("ufo_awesome_with_airport.tsv", 'w')
+
+    index = 0
+
+    with open('ufo_awesome_with_airport.json') as f:
+
+        for curr_json in f:
+            try:
+                #get rid of double backslash
+                input_json = json.loads(curr_json)
+                output = str(input_json["sighted_at"]) +\
+                         "\t" + str(input_json["reported_at"]) +\
+                         "\t" + str(input_json["location"]) +\
+                         "\t" + str(input_json["duration"]) +\
+                         "\t" + str(input_json["description"]) +\
+                         "\t" + str(input_json["airport_name"]) +\
+                         "\t" + str(input_json["airport_distance"]) + "\n"
+
+                print(output)
+                outfile.write(output)
+
+            except Exception as e:
+                err = str(index) + " " + str(e)
                 print(err)
                 error_log.write(err + "\n")
                 index = index + 1
@@ -97,9 +155,9 @@ def updateJSON(airports_list):
 
 
 
-
 if __name__ == "__main__":
 
     airports_list = []
     get_airports(airports_list)
-    updateJSON(airports_list)
+    #updateJSON(airports_list)
+    JSONtoTSV()
