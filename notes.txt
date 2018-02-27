@@ -15,10 +15,21 @@ https://stackoverflow.com/questions/38888714/python-insert-a-line-break-in-a-str
 
 https://stackoverflow.com/questions/38585204/pycharm-to-toggle-soft-wrap-in-code-editor
 
+https://www.iana.org/assignments/media-types/media-types.xhtml#message
+
+https://wiki.apache.org/tika/TikaAndVision
+https://wiki.apache.org/tika/ImageCaption
+
 Random Notes:
 - checking for large airports only
 -coordinates written as longitude, latitude
 -Skipped data: usually cant find location in geopy
+
+
+UFO Images
+-Get top 10 images of UFOS & run tensorflow image recognition on it
+-extract classnames with certain level of confidence
+-3 features (description with most matching words, all the matching words, whether "ufo" is in the description or not)
 
 
 Errors encountered:

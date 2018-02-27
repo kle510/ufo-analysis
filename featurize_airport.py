@@ -112,7 +112,7 @@ def formatJSON():
             formatted_json = curr.replace("\'", '"')
             formatted_json = formatted_json.replace("}", '}\n')
 
-    #remove the file and
+    #remove the file and rewrite it
     if os.path.exists('ufo_awesome_with_airport.json'):
         os.remove('ufo_awesome_with_airport.json')
 
