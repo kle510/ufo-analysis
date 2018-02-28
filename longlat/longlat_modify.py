@@ -5,12 +5,12 @@ from geopy.geocoders import Nominatim
 
 
 
-output_file = open("longlat_test.json", 'a')
+output_file = open("longlat.json", 'a')
 error_log = open("error_log_modify.txt", 'a')
 index = 0
 
-with open('longlat_test.json') as f:
-    with open('ufo_awesome_with_airport.json') as g:
+with open('longlat.json') as f:
+    with open('../ufo_awesome_with_airport.json') as g:
 
         # edit the range and index if we need to write in between
         for i in range(0 ,0):
@@ -24,7 +24,6 @@ with open('longlat_test.json') as f:
             line = line.replace("\'", '"')
 
             input_json = json.loads(line)
-            ufo_json = json.loads(ufo_line)
 
             while (int(input_json["index"]) > index):
 
@@ -69,5 +68,3 @@ with open('longlat_test.json') as f:
 
             index = index + 1
 
-            if index == 10:
-                break
