@@ -52,7 +52,7 @@ def get_tweets(twitter_features_list):
                 timezone_of_tweet = row[14]
                 airline_sentiment = row[1]
                 airline_sentiment_confidence = float(row[2])
-                airline_surveyed = row[3]
+                airline_surveyed = row[5]
                 airline_sentiment_score = 0
 
                 if airline_sentiment == "positive":
@@ -61,7 +61,7 @@ def get_tweets(twitter_features_list):
                     airline_sentiment_score = airline_sentiment_score - 1
 
 
-                if timezone_of_tweet.startswith('Western'):
+                if timezone_of_tweet.startswith('Pacific'):
                     western_total_airline_sentiment = western_total_airline_sentiment + airline_sentiment_score
                     western_total_airline_sentiment_confidence = western_total_airline_sentiment_confidence + airline_sentiment_confidence
                     western_total_num_entries = western_total_num_entries + 1
@@ -157,7 +157,7 @@ def updateJSON(twitter_features_list):
     list_of_json_strings = []
 
     with open('longlat.json') as f:
-        with open('ufo_awesome_with_airport.json') as g:
+        with open('ufo_awesome_with_airport_shooting_hospital.json') as g:
 
             for line_a, line_b in zip(f,g):
                 try:
@@ -166,49 +166,41 @@ def updateJSON(twitter_features_list):
 
 
 
-                    #shooting distance
-                    ufo_coordinates = (longlat_json["coordinates"])
-                    shortest_distance = 9514  # longest distance between any two US territories
-                    number_of_state_shootings = 0
-                    number_of_yearly_shootings = 0
-                    shooting_coordinates = twitter_features_list[0]
+                    ufo_longitude = eval(longlat_json["coordinates"])[0]
 
 
+                    print (ufo_longitude)
 
-                    for curr in shooting_coordinates:
+                    timezone = ""
+                    #eastern/central = 85
+                    #western/mountain = 113
+                    #mountain/central = 104
 
-                        if not all(curr):
-                            continue
+                    if ufo_longitude <= -113:
+                        timezone += "Pacific"
+                    elif ufo_longitude <= -104:
+                        timezone += "Mountain"
+                    elif ufo_longitude <= -85:
+                        timezone += "Central"
+                    elif ufo_longitude > -85:
+                        timezone += "Eastern"
 
-                        shooting_coordinates = curr
-                        curr_distance = great_circle(ufo_coordinates, shooting_coordinates).miles
-
-                        if curr_distance < shortest_distance:
-                            shortest_distance = curr_distance
-
-                    #number of shootings in state
-                    ufo_state = input_json["location"][-2:]
-
-                    if ufo_state in twitter_features_list[2]:
-                        number_of_state_shootings += twitter_features_list[2][ufo_state]
-
-
-                    #number of shootings per year
-                    ufo_year = input_json["sighted_at"][:4]
-
-                    if ufo_year in twitter_features_list[1]:
-                        number_of_yearly_shootings += twitter_features_list[1][ufo_year]
-
-
-
-
-
-                    #append the JSON
-                    input_json["closest_shooting"] = shortest_distance
-                    input_json["shootings_in_state"] = number_of_state_shootings
-                    input_json["shootings_per_year"] = number_of_yearly_shootings
-
-
+                    if timezone == "Pacific":
+                        input_json["average_sentiment"] = twitter_features_list[0][0]
+                        input_json["average_sentiment_confidence"] = twitter_features_list[0][1]
+                        input_json["most_popular_airline"] = twitter_features_list[0][2]
+                    elif timezone == "Mountain":
+                        input_json["average_sentiment"] = twitter_features_list[1][0]
+                        input_json["average_sentiment_confidence"] = twitter_features_list[1][1]
+                        input_json["most_popular_airline"] = twitter_features_list[1][2]
+                    elif timezone == "Central":
+                        input_json["average_sentiment"] = twitter_features_list[2][0]
+                        input_json["average_sentiment_confidence"] = twitter_features_list[2][1]
+                        input_json["most_popular_airline"] = twitter_features_list[2][2]
+                    elif timezone == "Eastern":
+                        input_json["average_sentiment"] = twitter_features_list[3][0]
+                        input_json["average_sentiment_confidence"] = twitter_features_list[3][1]
+                        input_json["most_popular_airline"] = twitter_features_list[3][2]
 
                     list_of_json_strings.append(str(input_json))
 
@@ -270,7 +262,11 @@ def JSONtoTSV(jsons_list):
                      "\t" + str(input_json["airport_distance"]) +\
                      "\t" + str(input_json["closest_shooting"]) + \
                      "\t" + str(input_json["shootings_in_state"]) + \
-                     "\t" + str(input_json["shootings_per_year"]) + "\n"
+                     "\t" + str(input_json["shootings_per_year"]) + \
+                     "\t" + str(input_json["average_sentiment"]) + \
+                     "\t" + str(input_json["average_sentiment_confidence"]) + \
+                     "\t" + str(input_json["most_popular_airline"]) + \
+                     "\n"
 
             #print(output)
 
@@ -291,10 +287,10 @@ def JSONtoTSV(jsons_list):
 def writeJSON(jsons_list):
 
     #remove the file and rewrite it
-    if os.path.exists('ufo_awesome_with_airport_shooting_hospital.json'):
-        os.remove('ufo_awesome_with_airport_shooting_hospital.json')
+    if os.path.exists('ufo_awesome_with_airport_shooting_hospital_twitter.json'):
+        os.remove('ufo_awesome_with_airport_shooting_hospital_twitter.json')
 
-    output_json = open("ufo_awesome_with_airport_shooting_hospital.json", 'w')
+    output_json = open("ufo_awesome_with_airport_shooting_hospital_twitter.json", 'w')
 
     for curr in jsons_list:
         output_json.write(curr)
@@ -302,10 +298,10 @@ def writeJSON(jsons_list):
 
 
 def writeTSV(tsvs_list):
-    if os.path.exists('ufo_awesome_with_airport_shooting_hospital.tsv'):
-        os.remove('ufo_awesome_with_airport_shooting_hospital.tsv')
+    if os.path.exists('ufo_awesome_with_airport_shooting_hospital_twitter.tsv'):
+        os.remove('ufo_awesome_with_airport_shooting_hospital_twitter.tsv')
 
-    output_tsv = open("ufo_awesome_with_airport_shooting_hospital.tsv", 'w')
+    output_tsv = open("ufo_awesome_with_airport_shooting_hospital_twitter.tsv", 'w')
 
     for curr in tsvs_list:
         output_tsv.write(curr)

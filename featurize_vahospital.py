@@ -139,7 +139,8 @@ def JSONtoTSV(jsons_list):
                      "\t" + str(input_json["shootings_per_year"]) + \
                      "\t" + str(input_json["closest_hospital_name"]) + \
                      "\t" + str(input_json["closest_hospital_distance"]) + \
-                     "\t" + str(input_json["closest_hospital_region"]) + "\n"
+                     "\t" + str(input_json["closest_hospital_region"]) + \
+                     "\n"
 
             #print(output)
 
