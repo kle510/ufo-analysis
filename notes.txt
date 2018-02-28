@@ -17,6 +17,8 @@ https://stackoverflow.com/questions/38585204/pycharm-to-toggle-soft-wrap-in-code
 
 https://stackoverflow.com/questions/72899/how-do-i-sort-a-list-of-dictionaries-by-values-of-the-dictionary-in-python
 
+https://stackoverflow.com/questions/1602934/check-if-a-given-key-already-exists-in-a-dictionary
+
 https://www.iana.org/assignments/media-types/media-types.xhtml#message
 
 

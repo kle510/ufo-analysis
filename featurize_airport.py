@@ -108,8 +108,15 @@ def formatJSON(list_of_json_strings):
 
     with open('ufo_awesome_with_airport.json') as f:
         for curr in list_of_json_strings:
-            formatted_json = curr.replace("\'", '"')
-            formatted_json = formatted_json.replace("}", '}\n')
+            formatted_json = curr.replace('"', "\'")
+            formatted_json = formatted_json.replace("{\'", '{"')
+            formatted_json = formatted_json.replace("\':", '":')
+            formatted_json = formatted_json.replace("\',", '",')
+
+            formatted_json = formatted_json.replace(": \'", ': "')
+            formatted_json = formatted_json.replace(", \'", ', "')
+            formatted_json = formatted_json.replace("\'}", '"}\n')
+
             list_of_formatted_json_strings.append(formatted_json)
 
             #output_json.write(str(formatted_json))
