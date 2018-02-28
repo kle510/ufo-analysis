@@ -15,7 +15,10 @@ https://stackoverflow.com/questions/38888714/python-insert-a-line-break-in-a-str
 
 https://stackoverflow.com/questions/38585204/pycharm-to-toggle-soft-wrap-in-code-editor
 
+https://stackoverflow.com/questions/72899/how-do-i-sort-a-list-of-dictionaries-by-values-of-the-dictionary-in-python
+
 https://www.iana.org/assignments/media-types/media-types.xhtml#message
+
 
 https://wiki.apache.org/tika/TikaAndVision
 https://wiki.apache.org/tika/ImageCaption
@@ -29,7 +32,7 @@ Random Notes:
 UFO Images
 -Get top 10 images of UFOS & run tensorflow image recognition on it
 -extract classnames with certain level of confidence
--3 features (description with most matching words, all the matching words, whether "ufo" is in the description or not)
+-3 features (caption with most matching words, list of all words that match the description, whether "ufo" is in the description or not)
 
 
 Errors encountered:

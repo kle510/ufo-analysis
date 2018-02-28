@@ -31,16 +31,13 @@ def get_airports(airports_list):
 def updateJSON(airports_list):
 
 
-    #delete the old file if one exists and make a new one
-    #if os.path.exists('ufo_awesome_with_airport.json'):
-    #    os.remove('ufo_awesome_with_airport.json')
-
-    output_json = open("ufo_awesome_with_airport.json", 'a')
     error_log = open("error_log_json.txt", 'a')
 
     index = 0
 
-    with open('ufo_awesome.json') as f:
+    list_of_json_strings = []
+
+    with open('ufo_awesome_test.json') as f:
 
         #edit the range and index if we need to write in between
         for i in range(0,0):
@@ -88,7 +85,8 @@ def updateJSON(airports_list):
                 input_json["airport_name"] = closest_airport[0]
                 input_json["airport_distance"] = closest_airport[1]
 
-                output_json.write(str(input_json))
+                list_of_json_strings.append(str(input_json))
+
                 index = index + 1
             except Exception as e:
                 err = str(index) + " " + str(e)
@@ -97,67 +95,90 @@ def updateJSON(airports_list):
                 index = index + 1
                 pass
 
-        formatJSON()
+        list_of_formatted_json_strings = formatJSON(list_of_json_strings)
+        return list_of_formatted_json_strings
 
 
 
-#fix the json formatting
-def formatJSON():
+#fix the json string formatting
+def formatJSON(list_of_json_strings):
 
-    formatted_json = {}
 
+    list_of_formatted_json_strings = []
 
     with open('ufo_awesome_with_airport.json') as f:
-        for curr in f:
+        for curr in list_of_json_strings:
             formatted_json = curr.replace("\'", '"')
             formatted_json = formatted_json.replace("}", '}\n')
+            list_of_formatted_json_strings.append(formatted_json)
+
+            #output_json.write(str(formatted_json))
+
+    return list_of_formatted_json_strings
+
+
+def JSONtoTSV(jsons_list):
+
+
+    error_log = open("error_log_tsv.txt", 'a')
+
+    index = 0
+    list_of_tsv_strings = []
+
+    for curr_json in jsons_list:
+        try:
+            #get rid of double backslash
+            input_json = json.loads(curr_json)
+            output = str(input_json["sighted_at"]) +\
+                     "\t" + str(input_json["reported_at"]) +\
+                     "\t" + str(input_json["location"]) +\
+                     "\t" + str(input_json["duration"]) +\
+                     "\t" + str(input_json["description"]) +\
+                     "\t" + str(input_json["airport_name"]) +\
+                     "\t" + str(input_json["airport_distance"]) + "\n"
+
+            #print(output)
+
+            list_of_tsv_strings.append(output)
+
+        except Exception as e:
+            err = str(index) + " " + str(e)
+            print(err)
+            error_log.write(err + "\n")
+            index = index + 1
+            pass
+    return list_of_tsv_strings
+
+
+def writeJSON(jsons_list):
 
     #remove the file and rewrite it
     if os.path.exists('ufo_awesome_with_airport.json'):
         os.remove('ufo_awesome_with_airport.json')
 
     output_json = open("ufo_awesome_with_airport.json", 'w')
-    output_json.write(formatted_json)
+
+    for curr in jsons_list:
+        output_json.write(curr)
 
 
-def JSONtoTSV():
+
+def writeTSV(tsvs_list):
     if os.path.exists('ufo_awesome_with_airport.tsv'):
         os.remove('ufo_awesome_with_airport.tsv')
 
-    error_log = open("error_log_tsv.txt", 'a')
-    outfile = open("ufo_awesome_with_airport.tsv", 'w')
+    output_tsv = open("ufo_awesome_with_airport.tsv", 'w')
 
-    index = 0
-
-    with open('ufo_awesome_with_airport.json') as f:
-
-        for curr_json in f:
-            try:
-                #get rid of double backslash
-                input_json = json.loads(curr_json)
-                output = str(input_json["sighted_at"]) +\
-                         "\t" + str(input_json["reported_at"]) +\
-                         "\t" + str(input_json["location"]) +\
-                         "\t" + str(input_json["duration"]) +\
-                         "\t" + str(input_json["description"]) +\
-                         "\t" + str(input_json["airport_name"]) +\
-                         "\t" + str(input_json["airport_distance"]) + "\n"
-
-                print(output)
-                outfile.write(output)
-
-            except Exception as e:
-                err = str(index) + " " + str(e)
-                print(err)
-                error_log.write(err + "\n")
-                index = index + 1
-                pass
-
+    for curr in tsvs_list:
+        output_tsv.write(curr)
 
 
 if __name__ == "__main__":
 
     airports_list = []
     get_airports(airports_list)
-    #updateJSON(airports_list)
-    JSONtoTSV()
+    jsons_list = updateJSON(airports_list)
+    tsvs_list = JSONtoTSV(jsons_list)
+
+    writeJSON(jsons_list)
+    writeTSV(tsvs_list)
