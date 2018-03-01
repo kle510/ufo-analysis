@@ -263,6 +263,9 @@ def JSONtoTSV(jsons_list):
                      "\t" + str(input_json["closest_shooting"]) + \
                      "\t" + str(input_json["shootings_in_state"]) + \
                      "\t" + str(input_json["shootings_per_year"]) + \
+                     "\t" + str(input_json["closest_hospital_name"]) + \
+                     "\t" + str(input_json["closest_hospital_distance"]) + \
+                     "\t" + str(input_json["closest_hospital_region"]) + \
                      "\t" + str(input_json["average_sentiment"]) + \
                      "\t" + str(input_json["average_sentiment_confidence"]) + \
                      "\t" + str(input_json["most_popular_airline"]) + \
