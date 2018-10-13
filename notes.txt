@@ -1,0 +1,43 @@
+Links:
+
+CSV build in reader
+https://stackoverflow.com/questions/29627631/how-can-i-tokenize-my-csv-file-in-python
+
+Json Lines
+https://stackoverflow.com/questions/12451431/loading-and-parsing-a-json-file-with-multiple-json-objects-in-python
+
+How to read files at x line
+https://stackoverflow.com/questions/4864361/using-python-how-to-read-a-file-starting-at-the-seventh-line
+
+
+https://stackoverflow.com/questions/45193335/remove-backslash-from-json-string
+https://stackoverflow.com/questions/38888714/python-insert-a-line-break-in-a-string-after-character-x
+
+https://stackoverflow.com/questions/38585204/pycharm-to-toggle-soft-wrap-in-code-editor
+
+https://stackoverflow.com/questions/72899/how-do-i-sort-a-list-of-dictionaries-by-values-of-the-dictionary-in-python
+
+https://stackoverflow.com/questions/1602934/check-if-a-given-key-already-exists-in-a-dictionary
+
+https://www.iana.org/assignments/media-types/media-types.xhtml#message
+
+
+https://wiki.apache.org/tika/TikaAndVision
+https://wiki.apache.org/tika/ImageCaption
+
+Random Notes:
+- checking for large airports only
+-coordinates written as longitude, latitude
+-Skipped data: usually cant find location in geopy
+
+
+UFO Images
+-Get top 10 images of UFOS & run tensorflow image recognition on it
+-extract classnames with certain level of confidence
+-3 features (caption with most matching words, list of all words that match the description, whether "ufo" is in the description or not)
+
+
+Errors encountered:
+-service time out (Calling geopy)
+-Skipped Data:  2258   'NoneType' object has no attribute 'longitude'
+
