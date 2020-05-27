@@ -59,27 +59,38 @@ Here, twitter-sentiment.sqlite is converted to a .csv file in an external progra
 
 ## Observations and Analysis
 
+<img src="images/table1.png" width="40%" height="40%">
+
+Table 1: UFO Distance to Closest Airport, Shooting, and Hospital
+
+
 From Table 1, we can expect a high result in UFO occurence to an airport, a mass shooting location, and a VA hospital within 25 miles. The distance matching percentage increases to > 75%  when the distance is increased to 50 miles for closest airport and closest shooting, indicating a level of high confidence. However, we don’t believe this to be because of a mental health correlation, but as a product of population density. In metropolitan and densely populated areas, there is greater access greater healthcare resources and large airports, and a higher chance for large scale shootings to occur. Our findings confirm this.
 
+<img src="images/table1.png" width="40%" height="40%">
 
- 
 Table 2: Year of UFO Sightings and Mass Shootings
+
 
 Table 2 is somewhat inconclusive. The UFO sightings report ends at 2010, but the most mass shootings have occurred in the US within the past 5 years. Still, we see both reports trending upward in the last 5-10 years of them being reported. 
 
- 
+<img src="images/table1.png" width="40%" height="40%">
+
 Table 3: State of UFO Sightings and Mass Shootings
+
 
 Table 3’s  result is eye-opening. California, Washington, Texas, and Florida consistently appear in the top 5, with New York, Arizona, Ohio in the top 10. While states such as California, Texas, and New York can be attributed to greater populations, the remaining results show some degree of correlation. Perhaps mental health does play a key. 
 
+<img src="images/table1.png" width="40%" height="40%">
 
- 
 Table 4: Number of VA Hospitals and their Territories Covered
 
-Table 4’s  showed similar results. There is greater access to veteran healthcare in California, Florida, New York, and Ohio. Indicating correlation with the previous two tests. 
 
+Table 4’s  showed similar results. There is greater access to veteran healthcare in California, Florida, New York, and Ohio. Indicating correlation with the previous two tests. 
  
+<img src="images/table1.png" width="40%" height="40%">
+
 Table 5: Twitter Results
+
 
 Surprisingly, breaking down the Twitter sentiment results by timezone did not provide any conclusive evidence about a relationship to UFO sightings  (Table 5). All 4 regions showed roughly equal levels of dissatisfaction with airlines, the sentimental analysis showed high confidence, and United came out as the most used airline (for Pacific, United was a very close second).
 
