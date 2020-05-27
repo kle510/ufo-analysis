@@ -58,30 +58,28 @@ us_state_abbrev = {
     'Wyoming': 'WY',
 }
 
-state_bank = [ "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA",
-    "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
-    "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
-    "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
-    "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",
-    "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado",
-    "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho",
-    "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana",
-    "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota",
-    "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada",
-    "New Hampshire", "New Jersey", "New Mexico", "New York",
-    "North Carolina", "North Dakota", "Ohio",
-    "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island",
-    "South  Carolina", "South Dakota", "Tennessee", "Texas", "Utah",
-    "Vermont", "Virginia", "Washington", "West Virginia",
-    "Wisconsin", "Wyoming"]
+state_bank = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA",
+              "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
+              "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+              "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
+              "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",
+              "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado",
+              "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho",
+              "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana",
+              "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota",
+              "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada",
+              "New Hampshire", "New Jersey", "New Mexico", "New York",
+              "North Carolina", "North Dakota", "Ohio",
+              "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island",
+              "South  Carolina", "South Dakota", "Tennessee", "Texas", "Utah",
+              "Vermont", "Virginia", "Washington", "West Virginia",
+              "Wisconsin", "Wyoming"]
+
 
 def get_shootings(shooting_features_list):
-    #with open('mass-shootings.csv', 'r') as csvfile:  # this will close the file automatically.
     with codecs.open('mass-shootings.csv', "r", encoding='utf-8', errors='ignore') as csvfile:
-
-        for i in range(0,1):
+        for i in range(0, 1):
             next(csvfile)
-
         file_reader = csv.reader(csvfile)
 
         dict_of_years = {}
@@ -89,16 +87,14 @@ def get_shootings(shooting_features_list):
         list_of_coordinates = []
 
         for row in file_reader:
-
-
             try:
                 shooting_location = row[2]
                 x = shooting_location.split(",")
                 shooting_state_raw = ""
                 shooting_state_abbrev = ""
 
-
-                if x[0].isdigit(): #some weird numeric code
+                # If shooting state is numeric code
+                if x[0].isdigit():
                     for state in state_bank:
                         if row[1].find(state) != -1:
                             shooting_state_raw = state
@@ -106,9 +102,10 @@ def get_shootings(shooting_features_list):
                     shooting_state_raw += x[1].strip()
                 print(shooting_state_raw)
 
-                if len(shooting_state_raw) == 2 : #state already abbreviated
+                # If state name is already abbreviated
+                if len(shooting_state_raw) == 2:
                     shooting_state_abbrev += shooting_state_raw
-                else: #raw state name
+                else:
                     shooting_state_abbrev += us_state_abbrev[shooting_state_raw]
 
                 if shooting_state_abbrev in dict_of_states:
@@ -128,88 +125,61 @@ def get_shootings(shooting_features_list):
                 shooting_longitude = row[12]
                 shooting_coordinates = (shooting_longitude, shooting_latitude)
                 list_of_coordinates.append(shooting_coordinates)
-
-
-
             except:
                 pass
 
     shooting_features_list.append(list_of_coordinates)
     shooting_features_list.append(dict_of_years)
     shooting_features_list.append(dict_of_states)
-
-
     return shooting_features_list
 
 
 def updateJSON(shooting_features_list):
 
-
     error_log = open("error_log_json.txt", 'a')
     index = 0
-
     list_of_json_strings = []
 
     with open('longlat.json') as f:
         with open('ufo_awesome_with_airport.json') as g:
-
-            for line_a, line_b in zip(f,g):
+            for line_a, line_b in zip(f, g):
                 try:
                     longlat_json = json.loads(line_a)
                     input_json = json.loads(line_b)
-
-
-
-                    #shooting distance
+                    # shooting distance
                     ufo_coordinates = (longlat_json["coordinates"])
                     shortest_distance = 9514  # longest distance between any two US territories
                     number_of_state_shootings = 0
                     number_of_yearly_shootings = 0
                     shooting_coordinates = shooting_features_list[0]
 
-
-
                     for curr in shooting_coordinates:
-
                         if not all(curr):
                             continue
-
                         shooting_coordinates = curr
-                        curr_distance = great_circle(ufo_coordinates, shooting_coordinates).miles
-
+                        curr_distance = great_circle(
+                            ufo_coordinates, shooting_coordinates).miles
                         if curr_distance < shortest_distance:
                             shortest_distance = curr_distance
 
-                    #number of shootings in state
+                    # Number of shootings in state
                     ufo_state = input_json["location"][-2:]
 
                     if ufo_state in shooting_features_list[2]:
                         number_of_state_shootings += shooting_features_list[2][ufo_state]
 
-
-                    #number of shootings per year
+                    # Number of shootings per year
                     ufo_year = input_json["sighted_at"][:4]
 
                     if ufo_year in shooting_features_list[1]:
                         number_of_yearly_shootings += shooting_features_list[1][ufo_year]
 
-
-
-
-
-                    #append the JSON
+                    # Append the JSON
                     input_json["closest_shooting"] = shortest_distance
                     input_json["shootings_in_state"] = number_of_state_shootings
                     input_json["shootings_per_year"] = number_of_yearly_shootings
-
-
-
                     list_of_json_strings.append(str(input_json))
-
-                    print(index)
                     index = index + 1
-
-
                 except Exception as e:
                     err = str(index) + " " + str(e)
                     print(err)
@@ -220,12 +190,10 @@ def updateJSON(shooting_features_list):
             list_of_formatted_json_strings = formatJSON(list_of_json_strings)
             return list_of_formatted_json_strings
 
+# fix the json string formatting
 
 
-#fix the json string formatting
 def formatJSON(list_of_json_strings):
-
-
     list_of_formatted_json_strings = []
 
     for curr in list_of_json_strings:
@@ -233,46 +201,35 @@ def formatJSON(list_of_json_strings):
         formatted_json = formatted_json.replace("{\'", '{"')
         formatted_json = formatted_json.replace("\':", '":')
         formatted_json = formatted_json.replace("\',", '",')
-
         formatted_json = formatted_json.replace(": \'", ': "')
         formatted_json = formatted_json.replace(", \'", ', "')
         formatted_json = formatted_json.replace("\'}", '"}\n')
         list_of_formatted_json_strings.append(formatted_json)
-
-
     return list_of_formatted_json_strings
 
 
 def JSONtoTSV(jsons_list):
 
-
     error_log = open("error_log_tsv.txt", 'a')
-
     index = 0
     list_of_tsv_strings = []
 
     for curr_json in jsons_list:
         try:
-            #get rid of double backslash
+            # get rid of double backslash
             input_json = json.loads(curr_json)
             output = str(input_json["sighted_at"]) +\
-                     "\t" + str(input_json["reported_at"]) +\
-                     "\t" + str(input_json["location"]) +\
-                     "\t" + str(input_json["duration"]) +\
-                     "\t" + str(input_json["description"]) +\
-                     "\t" + str(input_json["airport_name"]) +\
-                     "\t" + str(input_json["airport_distance"]) +\
-                     "\t" + str(input_json["closest_shooting"]) + \
-                     "\t" + str(input_json["shootings_in_state"]) + \
-                     "\t" + str(input_json["shootings_per_year"]) + "\n"
-
-            #print(output)
-
+                "\t" + str(input_json["reported_at"]) +\
+                "\t" + str(input_json["location"]) +\
+                "\t" + str(input_json["duration"]) +\
+                "\t" + str(input_json["description"]) +\
+                "\t" + str(input_json["airport_name"]) +\
+                "\t" + str(input_json["airport_distance"]) +\
+                "\t" + str(input_json["closest_shooting"]) + \
+                "\t" + str(input_json["shootings_in_state"]) + \
+                "\t" + str(input_json["shootings_per_year"]) + "\n"
             list_of_tsv_strings.append(output)
-
-            print(index)
-            index = index+1
-
+            index = index + 1
         except Exception as e:
             err = str(index) + " " + str(e)
             print(err)
@@ -283,24 +240,21 @@ def JSONtoTSV(jsons_list):
 
 
 def writeJSON(jsons_list):
-
-    #remove the file and rewrite it
+    # Remove the existing file and rewrite it
     if os.path.exists('ufo_awesome_with_airport_shooting.json'):
         os.remove('ufo_awesome_with_airport_shooting.json')
 
     output_json = open("ufo_awesome_with_airport_shooting.json", 'w')
-
     for curr in jsons_list:
         output_json.write(curr)
 
 
-
 def writeTSV(tsvs_list):
+    # Remove the existing file and rewrite it
     if os.path.exists('ufo_awesome_with_airport_shooting.tsv'):
         os.remove('ufo_awesome_with_airport_shooting.tsv')
 
     output_tsv = open("ufo_awesome_with_airport_shooting.tsv", 'w')
-
     for curr in tsvs_list:
         output_tsv.write(curr)
 
@@ -311,6 +265,5 @@ if __name__ == "__main__":
     get_shootings(shooting_features_list)
     jsons_list = updateJSON(shooting_features_list)
     tsvs_list = JSONtoTSV(jsons_list)
-
     writeJSON(jsons_list)
     writeTSV(tsvs_list)

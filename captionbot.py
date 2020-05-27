@@ -67,7 +67,7 @@ class CaptionBot:
         res = json.loads(text)
         logger.info(res)
         self.watermark = res.get("WaterMark")
-        msg = res.get("BotMessages")[1].replace('\\n','\n')
+        msg = res.get("BotMessages")[1].replace('\\n', '\n')
         return msg
 
     def file_caption(self, filename):
